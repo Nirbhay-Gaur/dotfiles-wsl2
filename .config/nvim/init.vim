@@ -24,11 +24,11 @@ call plug#begin("~/.config/nvim/plugged")
 	Plug 'sheerun/vim-polyglot'
 
 	" Auto Pairs
-	Plug 'jiangmiao/auto-pairs'
+	Plug 'vim-scripts/auto-pairs-gentle'
 
 	" Lightline
 	Plug 'itchyny/lightline.vim'
-    
+
   " Vim-Grepper
   Plug 'mhinz/vim-grepper'
 
@@ -49,16 +49,22 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Nerd Tree
   Plug 'preservim/nerdtree'
-  
+
   " Developer Icons
   Plug 'ryanoasis/vim-devicons'
 
   " Typescript support
   Plug 'leafgarland/typescript-vim'
-  
+
   " Typescript jsx support
   Plug 'peitalin/vim-jsx-typescript'
-    
+
+  " Colorizer
+  Plug 'lilydjwg/colorizer'
+
+  " Color Brackets
+  Plug 'luochen1990/rainbow'
+
 call plug#end()
 "-------------------------------------------------------------------
 
@@ -66,9 +72,10 @@ call plug#end()
 "  THEME CONFIGURATION
 "-------------------------------------------------------------------
 let g:edge_style = 'neon'
-let g:edge_enable_italic = 0
-let g:edge_disable_italic_comment = 1
+let g:edge_enable_italic = 1
 let g:edge_transparent_background = 1
+let g:edge_diagnostic_text_highlight = 1
+let g:edge_diagnostic_virtual_text = 'colored'
 
 if has('termguicolors')
     set termguicolors
@@ -82,6 +89,13 @@ colorscheme edge        " Set color scheme
 "  VIM AUTO SAVE
 "-------------------------------------------------------------------
 let g:auto_save = 1  " enable AutoSave on Vim startup
+let g:auto_save_events = ["CursorHold"]
+"-------------------------------------------------------------------
+
+"-------------------------------------------------------------------
+"  RAINBOW CONFIGURATION
+"-------------------------------------------------------------------
+let g:rainbow_active = 1  " enable rainbow plugin at startup
 "-------------------------------------------------------------------
 
 "-------------------------------------------------------------------
@@ -106,8 +120,16 @@ let g:gitgutter_enabled = 1
 
 "-------------------------------------------------------------------
 "  AUTO-PAIRS CONFIGURATION
+
+"let g:AutoPairsShortcutToggle = '<C-P>'
+let g:AutoPairsUseInsertedCount = 1
 "-------------------------------------------------------------------
-let g:AutoPairsShortcutToggle = '<C-P>'
+
+"-------------------------------------------------------------------
+"  ALE CONFIGURATION
+"-------------------------------------------------------------------
+let g:ale_sign_error = '✘'
+let g:ale_sign_warning = ''
 "-------------------------------------------------------------------
 
 "-------------------------------------------------------------------
@@ -134,6 +156,7 @@ set mouse=a                  " Enable mouse drag on window splits
 set tabstop=2                " How many columns of whitespace a \t is worth
 set shiftwidth=2             " How many columns of whitespace a “level of indentation” is worth
 set expandtab                " Use spaces when tabbing
+"set cursorline               " Highlight the cursor line in every window
 set smartindent              " Enable smart indentation
 if !has('nvim')
     set termwinsize=8x0 " Set terminal size
@@ -178,7 +201,7 @@ if !isdirectory(s:undoDir)
 endif
 let &undodir=s:undoDir
 set undofile          " Maintain undo history
-set updatetime=100    " Make GitGutter plugin more responsive
+set updatetime=750    " Make GitGutter plugin more responsive
 set viminfo=          " No backups
 set wildcharm=<Tab>   " Defines the trigger for 'wildmenu' in mappings
 set wildmenu          " Nice command completions
@@ -191,7 +214,7 @@ filetype plugin indent on
 "  Coc configuration
 "------------------------------------------------------------------
 " Language packs for coc
-let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
+let g:coc_global_extensions = ['coc-emmet', 'coc-eslint', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
 
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -203,9 +226,8 @@ set nowritebackup
 " Give more space for displaying messages.
 set cmdheight=2
 
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=100
+let g:coc_status_error_sign = '✘'
+let g:coc_status_warning_sign = ''  
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
@@ -362,10 +384,3 @@ let g:python3_host_prog=substitute(system("which -a python3 | head -n2 | tail -n
 else
    let g:python3_host_prog=substitute(system("which python3"), "\n", '', 'g')
 endif
-
-"-------------------------------------------------------------------
-"   NEOVIDE CONFIGURATION
-"-------------------------------------------------------------------
-set guifont=Fira_Code:h11
-
-"-------------------------------------------------------------------
